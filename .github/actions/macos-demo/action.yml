@@ -16,17 +16,11 @@ runs:
       shell: bash
       run: just default-toolchain
     - uses: Swatinem/rust-cache@v1
-    - name: Check x86_64 darwin
-      shell: bash
-      run: just check apple x86_64-apple-darwin
-    - name: Check aarch64 darwin
-      shell: bash
-      run: just check apple aarch64-apple-darwin
     - name: Build Example
       shell: bash
       run: cd apple/xcode && xcodebuild -scheme "example (macOS)" build CODE_SIGNING_ALLOWED=NO -derivedDataPath build
     - uses: actions/upload-artifact@v3
       with:
-        name: maplibre-macos-demo.app
-        path: apple/xcode/build/Build/Products/Debug/example.app
+        name: maplibre-macos-demo
+        path: apple/xcode/build/Build/Products/Debug
         if-no-files-found: error

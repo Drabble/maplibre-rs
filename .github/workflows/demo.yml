@@ -12,3 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/macos-demo
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/windows-demo
