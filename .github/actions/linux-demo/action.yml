@@ -14,11 +14,12 @@ runs:
       run: sudo apt-get install -y libwayland-dev libxkbcommon-dev # Required for winit
     - name: Build
       shell: bash
-      run: cargo build -p maplibre-demo
+      run: cargo build -p maplibre-demo --release --target x86_64-unknown-linux-gnu
     - name: Check
       shell: bash
       run: just check maplibre-demo x86_64-unknown-linux-gnu
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
-        name: maplibre-rs
-        path: target/x86_64-unknown-linux-gnu/debug/maplibre-demo
+        name: maplibre-x86_64-linux-demo
+        path: target/debug/maplibre-demo
+        if-no-files-found: error
