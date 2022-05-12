@@ -9,15 +9,15 @@ runs:
       shell: bash
       run: just default-toolchain
     - uses: Swatinem/rust-cache@v1
-    - name: Install Dependencies
-      shell: bash
-      run: sudo apt-get install -y libwayland-dev libxkbcommon-dev # Required for winit
+    #- name: Install Dependencies
+    #  shell: bash
+    #  run: sudo apt-get install -y libwayland-dev libxkbcommon-dev # Required for winit
     - name: Build
       shell: bash
       run: cargo build -p maplibre-demo --target x86_64-pc-windows-msvc
-    - name: Check
-      shell: bash
-      run: just check maplibre-demo x86_64-pc-windows-msvc
+    #- name: Check
+    #  shell: bash
+    #  run: just check maplibre-demo x86_64-pc-windows-msvc
     - uses: actions/upload-artifact@v3
       with:
         name: maplibre-x86_64-windows-demo
