@@ -14,7 +14,7 @@ runs:
       run: choco install sqlite -y --params "/NoTools"
     - name: Build SQLite lib
       shell: powershell
-      run: 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\17.2.32505.173\bin\Hostx64\x64\lib.exe' /DEF:C:\ProgramData\chocolatey\lib\SQLite\tools\sqlite3.def /OUT:C:\ProgramData\chocolatey\lib\SQLite\tools\sqlite3.lib /MACHINE:x64
+      run: \'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\17.2.32505.173\bin\Hostx64\x64\lib.exe\' /DEF:C:\ProgramData\chocolatey\lib\SQLite\tools\sqlite3.def /OUT:C:\ProgramData\chocolatey\lib\SQLite\tools\sqlite3.lib /MACHINE:x64
     - name: Add SQLite lib to path
       shell: bash
       run: echo "C:\ProgramData\chocolatey\lib\SQLite\tools" >> $env:GITHUB_PATH

@@ -36,10 +36,7 @@ For the c++ build tools, download the [Visual Studio 2022 Build tools](https://v
 from the Microsoft website. After the download, while installing the Build tools, make sure that you select the
 *c++ build tools*.
 
-In order to install sqlite3.lib you can either do it manually or use [chocolatey](https://chocolatey.org/install) 
-package manager. 
-
-Install sqlite3 you need to build the sqlite3.lib manually with the following 
+To install sqlite3 you need to build the sqlite3.lib manually with the following 
 [steps](https://gist.github.com/zeljic/d8b542788b225b1bcb5fce169ee28c55). This will generate a .lib file that
 you will have to add to your $PATH.
 
