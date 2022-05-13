@@ -9,16 +9,15 @@ runs:
       shell: bash
       run: just default-toolchain
     - uses: Swatinem/rust-cache@v1
+    - uses: ilammy/msvc-dev-cmd@v1 # Provide access to lib.exe
     - name: Install SQLite
       shell: powershell
       run: choco install sqlite -y --params "/NoTools"
     - name: Build SQLite lib
       shell: powershell
       run: |
-        cd "C:\Program Files\Microsoft Visual Studio"
-        tree
         cd "C:\ProgramData\chocolatey\lib\SQLite\tools"
-        & 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\17.2.32505.173\bin\Hostx64\x64\lib.exe' /DEF:sqlite3.def /OUT:sqlite3.lib /MACHINE:x64
+        lib /DEF:sqlite3.def /OUT:sqlite3.lib /MACHINE:x64
     - name: Add SQLite lib to path
       shell: bash
       run: echo "C:\ProgramData\chocolatey\lib\SQLite\tools" >> $env:GITHUB_PATH
