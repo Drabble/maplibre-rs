@@ -18,7 +18,7 @@ runs:
       run: |
         cd "C:\ProgramData\chocolatey\lib\SQLite\tools"
         lib /DEF:sqlite3.def /OUT:sqlite3.lib /MACHINE:x64
-        echo "C:\ProgramData\chocolatey\lib\SQLite\tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        echo "SQLITE3_LIB_DIR=C:\ProgramData\chocolatey\lib\SQLite\tools" >> $env:GITHUB_ENV
     - name: Build
       shell: bash
       run: cargo build -p maplibre-demo --target x86_64-pc-windows-msvc
