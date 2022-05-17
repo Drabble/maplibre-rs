@@ -29,6 +29,7 @@
 		0B85D5942812913700906D21 /* maplibre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = maplibre.swift; sourceTree = "<group>"; };
 		0B85D5A32812987B00906D21 /* libmaplibre_apple.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libmaplibre_apple.a; sourceTree = SOURCE_ROOT; };
 		0BE452D62812EEA8003BD2A5 /* example--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "example--iOS--Info.plist"; sourceTree = "<group>"; };
+		44479BF228339D4600A8A0CC /* libmaplibre_apple.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmaplibre_apple.a; path = "../../target/x86_64-apple-darwin/release/libmaplibre_apple.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +94,7 @@
 		0B85D573281290D400906D21 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				44479BF228339D4600A8A0CC /* libmaplibre_apple.a */,
 				0B85D5A32812987B00906D21 /* libmaplibre_apple.a */,
 			);
 			name = Frameworks;
@@ -703,6 +705,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
