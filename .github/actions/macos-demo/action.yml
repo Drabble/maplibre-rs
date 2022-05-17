@@ -16,11 +16,13 @@ runs:
       shell: bash
       run: just default-toolchain
     - uses: Swatinem/rust-cache@v1
-    - name: Build Example
+    # TODO: Build in release instad of debug doesn't work
+    # TODO: Sign app
+    - name: Build
       shell: bash
-      run: cd apple/xcode && xcodebuild -scheme "example (macOS)" build CODE_SIGNING_ALLOWED=NO MACOSX_DEPLOYMENT_TARGET=10.9 -derivedDataPath build # TODO: Release build doesn't work + signing app or archive
+      run: cd apple/xcode && xcodebuild -scheme "example (macOS)" build CODE_SIGNING_ALLOWED=NO MACOSX_DEPLOYMENT_TARGET=10.9 -derivedDataPath build
     - uses: actions/upload-artifact@v3
       with:
-        name: maplibre-macos-demo
+        name: maplibre-x86_64-apple-darwin-demo
         path: apple/xcode/build/Build/Products/Debug/*.app
         if-no-files-found: error
