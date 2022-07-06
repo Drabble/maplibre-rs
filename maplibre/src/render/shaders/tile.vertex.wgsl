@@ -3,15 +3,22 @@ struct ShaderCamera {
     view_position: vec4<f32>,
 };
 
+struct ShaderLight {
+    direction: vec4<f32>,
+    color: vec4<f32>,
+}
+
 struct ShaderGlobals {
     camera: ShaderCamera,
+    light: ShaderLight,
 };
 
 @group(0) @binding(0) var<uniform> globals: ShaderGlobals;
 
 struct VertexOutput {
-    @location(0)  v_color: vec4<f32>,
     @builtin(position) position: vec4<f32>,
+    @location(0)  v_color: vec4<f32>,
+    @location(1) normal: vec3<f32>,
 };
 
 @vertex
@@ -38,5 +45,5 @@ fn main(
     // FIXME: how to fix z-fighting?
     position.z = z_index;
 
-    return VertexOutput(color, position);
+    return VertexOutput(position, color, normal);
 }

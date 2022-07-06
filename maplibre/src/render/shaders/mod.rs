@@ -223,14 +223,41 @@ impl Default for ShaderCamera {
 
 #[repr(C)]
 #[derive(Copy, Clone, Pod, Zeroable)]
+pub struct ShaderLight {
+    direction: Vec4f32,
+    color: Vec4f32,
+}
+
+impl ShaderLight {
+    pub fn new(direction: Vec4f32, color: Vec4f32) -> Self {
+        Self {
+            direction,
+            color,
+        }
+    }
+}
+
+impl Default for ShaderLight {
+    fn default() -> Self {
+        Self {
+            direction: [-0.2, -0.2, -0.8, 0.0],
+            color: [1.0, 1.0, 1.0, 1.0],
+        }
+    }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone, Pod, Zeroable)]
 pub struct ShaderGlobals {
     camera: ShaderCamera,
+    light: ShaderLight,
 }
 
 impl ShaderGlobals {
-    pub fn new(camera_uniform: ShaderCamera) -> Self {
+    pub fn new(camera_uniform: ShaderCamera, light_uniform: ShaderLight) -> Self {
         Self {
             camera: camera_uniform,
+            light: light_uniform,
         }
     }
 }

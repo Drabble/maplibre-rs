@@ -6,7 +6,7 @@ use crate::io::tile_repository::{StoredLayer, TileRepository};
 use crate::render::camera::ViewProjection;
 
 use crate::render::shaders::{
-    ShaderCamera, ShaderFeatureStyle, ShaderGlobals, ShaderLayerMetadata, Vec4f32,
+    ShaderCamera, ShaderLight, ShaderFeatureStyle, ShaderGlobals, ShaderLayerMetadata, Vec4f32,
 };
 
 use crate::render::util::Eventually::Initialized;
@@ -48,7 +48,7 @@ impl Stage for UploadStage {
                         .cast::<f32>()
                         .unwrap()
                         .into(),
-                ))]),
+                ), ShaderLight::default())]),
             );
         }
 

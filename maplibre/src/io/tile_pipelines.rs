@@ -7,6 +7,8 @@ use crate::tessellation::IndexDataType;
 use geozero::GeozeroDatasource;
 use prost::Message;
 use std::collections::{HashMap, HashSet};
+use cgmath::InnerSpace;
+use wgpu::VertexFormat::Float32x3;
 use crate::render::ShaderVertex;
 use crate::Style;
 
@@ -117,7 +119,7 @@ impl Processable for TessellateLayer {
                     // We duplicate each vertex and translate them on the z axis by `height` amount.
                     // Height is by default 4.0 but changes if the height key is defined on the feature
                     // metadata.
-                    let mut extruded_vertices = vec!();
+                    /*let mut extruded_vertices = vec!();
                     let mut feature_position = 0;
                     let mut feature_count = tessellator.feature_indices[feature_position];
                     for mut vertice in tessellator.buffer.vertices.iter(){
@@ -125,33 +127,46 @@ impl Processable for TessellateLayer {
                         for i in (0..layer.features[feature_position].tags.len()).step_by(2) {
                             log::info!("Key {:?} value {:?}", layer.keys[layer.features[feature_position].tags[i] as usize], layer.values[layer.features[feature_position].tags[i+1] as usize]);
                         }
-                        extruded_vertices.push(ShaderVertex::new([vertice.position[0], vertice.position[1], 4.0], vertice.normal));
+                        extruded_vertices.push(ShaderVertex::new([vertice.position[0], vertice.position[1], 40.0], vertice.normal));
                         feature_count -= 1;
                         while feature_count == 0 {
                             feature_position += 1;
                             feature_count = tessellator.feature_indices[feature_position];
                         }
-                    }
+                    }*/
 
                     // For each "wall" of the buildings, we create 2 triangles in the clockwise
                     // direction so that their normals are facing outward.
+                    let mut extruded_vertices = vec!();
                     let mut side_faces_indices = vec!();
                     for mut edge in contour_edges{
-                        let a = edge.0;
-                        let b = edge.1;
-                        let a_extruded = a + tessellator.buffer.vertices.len() as u32;
-                        let b_extruded = b + tessellator.buffer.vertices.len() as u32;
+                        let edge_vector = [
+                            tessellator.buffer.vertices[edge.1 as usize].position[0] - tessellator.buffer.vertices[edge.0 as usize].position[0],
+                            tessellator.buffer.vertices[edge.1 as usize].position[1] - tessellator.buffer.vertices[edge.0 as usize].position[1],
+                            0.0
+                        ];
+                        let normal_vector = cgmath::Vector3::from([-edge_vector[1], edge_vector[0], 0.0]).normalize().into();
+                        let a_position = tessellator.buffer.vertices[edge.0 as usize].position;
+                        let b_position = tessellator.buffer.vertices[edge.1 as usize].position;
+                        extruded_vertices.push(ShaderVertex::new([a_position[0], a_position[1], 0.0], normal_vector));
+                        let a = (extruded_vertices.len() + tessellator.buffer.vertices.len() - 1) as u32;
+                        extruded_vertices.push(ShaderVertex::new([b_position[0], b_position[1], 0.0], normal_vector));
+                        let b = (extruded_vertices.len() + tessellator.buffer.vertices.len() - 1) as u32;
+                        extruded_vertices.push(ShaderVertex::new([a_position[0], a_position[1], 40.0], normal_vector));
+                        let a_extruded = (extruded_vertices.len() + tessellator.buffer.vertices.len() - 1) as u32;
+                        extruded_vertices.push(ShaderVertex::new([b_position[0], b_position[1], 40.0], normal_vector));
+                        let b_extruded = (extruded_vertices.len() + tessellator.buffer.vertices.len() - 1) as u32;
                         side_faces_indices.push(a);
-                        side_faces_indices.push(a_extruded);
-                        side_faces_indices.push(b);
-                        side_faces_indices.push(b);
-                        side_faces_indices.push(a_extruded);
                         side_faces_indices.push(b_extruded);
+                        side_faces_indices.push(a_extruded);
+                        side_faces_indices.push(b);
+                        side_faces_indices.push(b_extruded);
+                        side_faces_indices.push(a);
                     }
 
-                    // We move the bottom faces to the top, because the bottom will not be visible anyway.
-                    for &(mut indice) in tessellator.buffer.indices.iter(){
-                        indice += tessellator.buffer.vertices.len() as u32;
+                    // We move the vertices to the top, because the bottom will not be visible anyway.
+                    for i in 0..tessellator.buffer.vertices.len(){
+                        tessellator.buffer.vertices[i] = ShaderVertex::new([tessellator.buffer.vertices[i].position[0], tessellator.buffer.vertices[i].position[1], 40.0], tessellator.buffer.vertices[i].normal);
                     }
 
                     // We insert the new walls to the buffer.
