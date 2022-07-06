@@ -21,7 +21,7 @@ use crate::stages::message::{
 use crate::stages::populate_tile_store_stage::PopulateTileStore;
 
 use crate::tessellation::{IndexDataType, OverAlignedVertexBuffer};
-use crate::{HttpClient, ScheduleMethod, Scheduler};
+use crate::{HttpClient, ScheduleMethod, Scheduler, Style};
 use geozero::mvt::tile;
 use geozero::GeozeroDatasource;
 
@@ -57,7 +57,7 @@ pub fn register_stages<HC: HttpClient, SM: ScheduleMethod>(
 }
 
 pub struct HeadedPipelineProcessor {
-    state: SharedThreadState,
+    state: SharedThreadState
 }
 
 impl PipelineProcessor for HeadedPipelineProcessor {
@@ -119,7 +119,7 @@ impl PipelineProcessor for HeadedPipelineProcessor {
 pub struct SharedThreadState {
     pub tile_request_state: Arc<Mutex<TileRequestState>>,
     pub message_sender: mpsc::Sender<TessellateMessage>,
-    pub geometry_index: Arc<Mutex<GeometryIndex>>,
+    pub geometry_index: Arc<Mutex<GeometryIndex>>
 }
 
 impl SharedThreadState {
@@ -131,13 +131,13 @@ impl SharedThreadState {
     }
 
     #[tracing::instrument(skip_all)]
-    pub fn process_tile(&self, request_id: TileRequestID, data: Box<[u8]>) -> Result<(), Error> {
+    pub fn process_tile(&self, request_id: TileRequestID, data: Box<[u8]>, style: Style) -> Result<(), Error> {
         if let Some(tile_request) = self.get_tile_request(request_id) {
             let mut pipeline_context = PipelineContext::new(HeadedPipelineProcessor {
-                state: self.clone(),
+                state: self.clone()
             });
             let pipeline = build_vector_tile_pipeline();
-            pipeline.process((tile_request, request_id, data), &mut pipeline_context);
+            pipeline.process((tile_request, request_id, data, style), &mut pipeline_context);
         }
 
         Ok(())

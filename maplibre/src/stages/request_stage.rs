@@ -101,7 +101,7 @@ where
             if coords.build_quad_key().is_some() {
                 // TODO: Make tesselation depend on style?
                 try_failed = self
-                    .try_request_tile(tile_repository, &coords, &source_layers)
+                    .try_request_tile(tile_repository, &coords, &source_layers, style)
                     .unwrap();
             }
         }
@@ -113,6 +113,7 @@ where
         tile_repository: &TileRepository,
         coords: &WorldTileCoords,
         layers: &HashSet<String>,
+        style: &Style
     ) -> Result<bool, Error> {
         if !tile_repository.is_layers_missing(coords, layers) {
             return Ok(false);
@@ -139,13 +140,14 @@ where
                 let coords = *coords;
 
                 let state = self.shared_thread_state.clone();
+                let style = style.clone();
                 self.scheduler
                     .schedule_method()
                     .schedule(Box::new(move || {
                         Box::pin(async move {
                             match client.fetch(&coords).await {
                                 Ok(data) => state
-                                    .process_tile(request_id, data.into_boxed_slice())
+                                    .process_tile(request_id, data.into_boxed_slice(), style)
                                     .unwrap(),
                                 Err(e) => {
                                     log::error!("{:?}", &e);

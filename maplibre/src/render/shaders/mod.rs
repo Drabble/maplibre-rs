@@ -96,13 +96,13 @@ impl Shader for TileShader {
                         // position
                         wgpu::VertexAttribute {
                             offset: 0,
-                            format: wgpu::VertexFormat::Float32x2,
+                            format: wgpu::VertexFormat::Float32x3,
                             shader_location: 0,
                         },
                         // normal
                         wgpu::VertexAttribute {
-                            offset: wgpu::VertexFormat::Float32x2.size(),
-                            format: wgpu::VertexFormat::Float32x2,
+                            offset: wgpu::VertexFormat::Float32x3.size(),
+                            format: wgpu::VertexFormat::Float32x3,
                             shader_location: 1,
                         },
                     ],
@@ -238,19 +238,19 @@ impl ShaderGlobals {
 #[repr(C)]
 #[derive(Copy, Clone, Pod, Zeroable)]
 pub struct ShaderVertex {
-    pub position: Vec2f32,
-    pub normal: Vec2f32,
+    pub position: Vec3f32,
+    pub normal: Vec3f32,
 }
 
 impl ShaderVertex {
-    pub fn new(position: Vec2f32, normal: Vec2f32) -> Self {
+    pub fn new(position: Vec3f32, normal: Vec3f32) -> Self {
         Self { position, normal }
     }
 }
 
 impl Default for ShaderVertex {
     fn default() -> Self {
-        ShaderVertex::new([0.0, 0.0], [0.0, 0.0])
+        ShaderVertex::new([0.0, 0.0, 0.0], [0.0, 0.0, 0.0])
     }
 }
 
