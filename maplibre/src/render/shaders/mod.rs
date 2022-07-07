@@ -240,7 +240,7 @@ impl ShaderLight {
 impl Default for ShaderLight {
     fn default() -> Self {
         Self {
-            direction: [-0.2, -0.2, -0.8, 0.0],
+            direction: [-0.2, -0.2, 1.0, 0.0],
             color: [1.0, 1.0, 1.0, 1.0],
         }
     }

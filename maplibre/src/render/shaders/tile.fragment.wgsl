@@ -23,7 +23,7 @@ struct Output {
 fn main(@builtin(position) position: vec4<f32>, @location(0) v_color: vec4<f32>, @location(1) normal: vec3<f32>) -> Output {
 
     // We don't need (or want) much ambient light, so 0.1 is fine
-    let ambient_strength = 0.5;
+    let ambient_strength = 0.1;
     let ambient_color = globals.light.color.xyz * ambient_strength;
 
     let diffuse_strength = max(dot(normal, globals.light.direction.xyz), 0.0);

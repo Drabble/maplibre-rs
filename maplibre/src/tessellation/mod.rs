@@ -30,7 +30,7 @@ pub struct VertexConstructor {}
 
 impl FillVertexConstructor<ShaderVertex> for VertexConstructor {
     fn new_vertex(&mut self, vertex: FillVertex) -> ShaderVertex {
-        ShaderVertex::new([vertex.position().x, vertex.position().y, 0.0], [0.0, 0.0, 0.0])
+        ShaderVertex::new([vertex.position().x, vertex.position().y, 0.0], [0.0, 0.0, 1.0])
     }
 }
 
@@ -38,7 +38,7 @@ impl StrokeVertexConstructor<ShaderVertex> for VertexConstructor {
     fn new_vertex(&mut self, vertex: StrokeVertex) -> ShaderVertex {
         ShaderVertex::new(
             [vertex.position().x, vertex.position().y, 0.0],
-            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 1.0],
         )
     }
 }
