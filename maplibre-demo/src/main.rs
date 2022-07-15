@@ -21,6 +21,7 @@ use maplibre_winit::winit::WinitMapWindowConfig;
 
 use maplibre::headless::utils::HeadlessPipelineProcessor;
 use std::collections::HashSet;
+use maplibre::style::Style;
 
 #[cfg(feature = "trace")]
 fn enable_tracing() {
@@ -84,6 +85,7 @@ fn run_headless() {
                 },
                 request_id,
                 data,
+                Style::default()
             ),
             &mut pipeline_context,
         );

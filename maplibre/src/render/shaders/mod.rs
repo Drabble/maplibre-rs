@@ -65,7 +65,7 @@ impl Shader for TileMaskShader {
         FragmentState {
             source: include_str!("tile_mask.fragment.wgsl"),
             entry_point: "main",
-            targets: vec![wgpu::ColorTargetState {
+            targets: vec![Some(wgpu::ColorTargetState {
                 format: self.format,
                 blend: None,
                 write_mask: if self.draw_colors {
@@ -73,7 +73,7 @@ impl Shader for TileMaskShader {
                 } else {
                     wgpu::ColorWrites::empty()
                 },
-            }],
+            })],
         }
     }
 }
@@ -96,13 +96,13 @@ impl Shader for TileShader {
                         // position
                         wgpu::VertexAttribute {
                             offset: 0,
-                            format: wgpu::VertexFormat::Float32x2,
+                            format: wgpu::VertexFormat::Float32x3,
                             shader_location: 0,
                         },
                         // normal
                         wgpu::VertexAttribute {
-                            offset: wgpu::VertexFormat::Float32x2.size(),
-                            format: wgpu::VertexFormat::Float32x2,
+                            offset: wgpu::VertexFormat::Float32x3.size(),
+                            format: wgpu::VertexFormat::Float32x3,
                             shader_location: 1,
                         },
                     ],
@@ -175,7 +175,7 @@ impl Shader for TileShader {
         FragmentState {
             source: include_str!("tile.fragment.wgsl"),
             entry_point: "main",
-            targets: vec![wgpu::ColorTargetState {
+            targets: vec![Some(wgpu::ColorTargetState {
                 format: self.format,
                 /*blend: Some(wgpu::BlendState {
                     color: wgpu::BlendComponent {
@@ -191,7 +191,7 @@ impl Shader for TileShader {
                 }),*/
                 blend: None,
                 write_mask: wgpu::ColorWrites::ALL,
-            }],
+            })],
         }
     }
 }
@@ -223,14 +223,41 @@ impl Default for ShaderCamera {
 
 #[repr(C)]
 #[derive(Copy, Clone, Pod, Zeroable)]
+pub struct ShaderLight {
+    direction: Vec4f32,
+    color: Vec4f32,
+}
+
+impl ShaderLight {
+    pub fn new(direction: Vec4f32, color: Vec4f32) -> Self {
+        Self {
+            direction,
+            color,
+        }
+    }
+}
+
+impl Default for ShaderLight {
+    fn default() -> Self {
+        Self {
+            direction: [-0.2, -0.2, 1.0, 0.0],
+            color: [1.0, 1.0, 1.0, 1.0],
+        }
+    }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone, Pod, Zeroable)]
 pub struct ShaderGlobals {
     camera: ShaderCamera,
+    light: ShaderLight,
 }
 
 impl ShaderGlobals {
-    pub fn new(camera_uniform: ShaderCamera) -> Self {
+    pub fn new(camera_uniform: ShaderCamera, light_uniform: ShaderLight) -> Self {
         Self {
             camera: camera_uniform,
+            light: light_uniform,
         }
     }
 }
@@ -238,19 +265,19 @@ impl ShaderGlobals {
 #[repr(C)]
 #[derive(Copy, Clone, Pod, Zeroable)]
 pub struct ShaderVertex {
-    pub position: Vec2f32,
-    pub normal: Vec2f32,
+    pub position: Vec3f32,
+    pub normal: Vec3f32,
 }
 
 impl ShaderVertex {
-    pub fn new(position: Vec2f32, normal: Vec2f32) -> Self {
+    pub fn new(position: Vec3f32, normal: Vec3f32) -> Self {
         Self { position, normal }
     }
 }
 
 impl Default for ShaderVertex {
     fn default() -> Self {
-        ShaderVertex::new([0.0, 0.0], [0.0, 0.0])
+        ShaderVertex::new([0.0, 0.0, 0.0], [0.0, 0.0, 0.0])
     }
 }
 
